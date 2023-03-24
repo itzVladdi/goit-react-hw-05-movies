@@ -1,5 +1,6 @@
 import { Loader } from 'components/Loader/Loader';
 import { MovieList } from 'components/MoviesList/MoviesList';
+import { Container } from 'components/SharedLayout/SharedLayout.styled';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
@@ -24,10 +25,10 @@ export function Home() {
   }, []);
 
   return (
-    <div>
+    <Container>
       <h2>Trending today</h2>
       {isLoading && <Loader isLoading={isLoading} />}
       <MovieList dataMovies={dataMovies} />
-    </div>
+    </Container>
   );
 }

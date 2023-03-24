@@ -1,7 +1,15 @@
+import { ImgPlaceHolder } from 'components/ImgPlaceHolder/ImgPlaceHolder';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getMovieCredits } from 'services/movieAPI';
+import {
+  ActorName,
+  CastList,
+  CastListItem,
+  CharacterName,
+  PhotoWrapper,
+} from './Cast.styled';
 
 export function Cast() {
   const [castData, setCastData] = useState([]);
@@ -20,20 +28,29 @@ export function Cast() {
   return (
     <>
       {castData.length > 0 ? (
-        <ul>
+        <CastList>
           {castData.map(actor => {
             return (
-              <li key={actor.id}>
-                <img
-                  src={`https://image.tmdb.org/t/p/w200/${actor.profile_path}`}
-                  alt=""
-                />
-                <p>{actor.name}</p>
-                <p>Character: {actor.character}</p>
-              </li>
+              <CastListItem key={actor.id}>
+                {actor.profile_path?.length > 0 ? (
+                  <PhotoWrapper>
+                    <img
+                      src={`https://image.tmdb.org/t/p/w200/${actor.profile_path}`}
+                      alt=""
+                    />
+                  </PhotoWrapper>
+                ) : (
+                  <PhotoWrapper>
+                    <ImgPlaceHolder />
+                  </PhotoWrapper>
+                )}
+                <ActorName>{actor.name}</ActorName>
+                <span>Character</span>
+                <CharacterName>{actor.character}</CharacterName>
+              </CastListItem>
             );
           })}
-        </ul>
+        </CastList>
       ) : (
         <div>
           <p>We don't have any cast information.</p>

@@ -1,10 +1,22 @@
+import { ImgPlaceHolder } from 'components/ImgPlaceHolder/ImgPlaceHolder';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { Link, Outlet, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useParams } from 'react-router-dom';
 import { getMovieDetails } from 'services/movieAPI';
+import {
+  AddInfoNavLink,
+  AddInfoWrapper,
+  AdditionalList,
+  GoBackLink,
+  ImgWrapper,
+  InfoWrapper,
+  MovieWrapper,
+} from './MovieDetalis.styled';
 
 export function MovieDetalis() {
-  const [movieData, setMovieData] = useState({});
+  const location = useLocation();
+  const backLinkHref = location.state?.from ?? '/';
+  const [movieData, setMovieData] = useState(null);
   const { movieId } = useParams();
   useEffect(() => {
     async function fetchMovieDetails(id) {
@@ -17,30 +29,46 @@ export function MovieDetalis() {
     }
     fetchMovieDetails(movieId);
   }, [movieId]);
-
+  if (!movieData) return;
   const { title, overview, genres, poster_path, vote_average } = movieData;
   return (
     <div>
-      <img src={`https://image.tmdb.org/t/p/w500${poster_path}`} alt="" />
-      <div>
-        <h3>{title}</h3>
-        <h3>User Score: {(vote_average * 10).toFixed(1)}%</h3>
-        <h3>Overview</h3>
-        <p>{overview}</p>
-        <h3>Genres</h3>
-        <p>{genres?.map(genre => genre.name).join(' ')}</p>
-      </div>
-      <div>
+      <MovieWrapper>
+        <GoBackLink to={backLinkHref}>&#129044;{` Go back`}</GoBackLink>
+        {poster_path?.length > 0 ? (
+          <ImgWrapper>
+            <img src={`https://image.tmdb.org/t/p/w500${poster_path}`} alt="" />
+          </ImgWrapper>
+        ) : (
+          <ImgWrapper>
+            <ImgPlaceHolder />
+          </ImgWrapper>
+        )}
+
+        <InfoWrapper>
+          <h2>{title}</h2>
+          <h3>User Score: {(vote_average * 10).toFixed(1)}%</h3>
+          <h3>Overview</h3>
+          <p>{overview}</p>
+          <h3>Genres</h3>
+          <p>{genres?.map(genre => genre.name).join(' ')}</p>
+        </InfoWrapper>
+      </MovieWrapper>
+      <AddInfoWrapper>
         <h3>Additional information</h3>
-        <ul>
+        <AdditionalList>
           <li>
-            <Link to="cast">Cast</Link>
+            <AddInfoNavLink to="cast" state={{ from: backLinkHref }}>
+              Cast
+            </AddInfoNavLink>
           </li>
           <li>
-            <Link to="reviews">Reviews</Link>
+            <AddInfoNavLink to="reviews" state={{ from: backLinkHref }}>
+              Reviews
+            </AddInfoNavLink>
           </li>
-        </ul>
-      </div>
+        </AdditionalList>
+      </AddInfoWrapper>
       <div>
         <Outlet />
       </div>

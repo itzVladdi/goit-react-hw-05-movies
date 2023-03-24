@@ -1,9 +1,11 @@
 import { MovieList } from 'components/MoviesList/MoviesList';
+import { Container } from 'components/SharedLayout/SharedLayout.styled';
 import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getMovieByQuery } from 'services/movieAPI';
+import { Button, Input, StyledForm } from './Movie.styled';
 export function Movies() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState('');
@@ -32,9 +34,9 @@ export function Movies() {
     setSearchParams(params);
   }
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
+    <Container>
+      <StyledForm onSubmit={handleSubmit}>
+        <Input
           value={query}
           type="text"
           autoComplete="off"
@@ -42,8 +44,8 @@ export function Movies() {
           placeholder="Search movie"
           onChange={event => setQuery(event.target.value)}
         />
-        <button type="submit"> Search </button>{' '}
-      </form>
+        <Button type="submit"> Search </Button>
+      </StyledForm>
       {resultData?.length > 0 && (
         <div>
           <MovieList dataMovies={resultData} />
@@ -54,6 +56,6 @@ export function Movies() {
           <p>No matches.</p>
         </div>
       )}
-    </div>
+    </Container>
   );
 }
